@@ -11,13 +11,15 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from django.utils.translation import gettext_lazy as _
 
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
 IS_PRODUCTION = ENVIRONMENT == "production"
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -25,6 +27,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # Application definition
 
 DEPENDENCIES_APPS = [
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -35,6 +38,7 @@ DEPENDENCIES_APPS = [
 
 PROJECT_APPS = [
     'main',
+    'users'
 ]
 
 ADDONS = [
@@ -98,6 +102,20 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# jazzmin settings
+JAZZMIN_SETTINGS = {
+    "welcome_sign": 'Welcome admin ' + WSGI_APPLICATION.split(".")[0],
+    "site_header": "Library",
+    "site_brand": WSGI_APPLICATION.split(".")[0],
+    #change logo admin
+    #"site_logo": "logo.png",
+    "copyright": WSGI_APPLICATION.split(".")[0],
+    "user_avatar": "avatar",
+    "language_chooser": True,
+    "changeform_format": "horizontal_tabs",
+    "related_modal_active": True
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -107,6 +125,14 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+AUTH_USER_MODEL = 'users.user'
+
+
+LANGUAGES = [
+    ("es", _("Spanish")),
+    ("en", _("English")),
+]
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -123,4 +149,3 @@ DEFAULT_FROM_EMAIL = 'No Reply <no-reply@project_name.com>'
 SERVER_EMAIL = 'Server <server@project_name.com>'
 # ADMINS = [('Admin', 'admin@project_name.com')]
 # MANAGERS = [('Admin', 'admin@project_name.com')]
-

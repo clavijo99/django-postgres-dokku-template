@@ -1,6 +1,6 @@
 # project_name
 
-Django 3.1.1 + Postgres 11 + Dokku config (Production Ready)
+Django 3.2.24 + Postgres 11 + Dokku config (Production Ready)
 
 ## Documentation ##
 
@@ -59,7 +59,7 @@ git merge origin/webpack
 git merge origin/push-notifications
 ```
 
-Rename your project files and directorys:
+Rename your project files and directors:
 ```
 make name=project_name init
 ```

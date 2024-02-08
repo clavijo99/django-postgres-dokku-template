@@ -9,7 +9,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 # CORS Config: install django-cors-headers and uncomment the following to allow CORS from any origin
-"""
 DEV_APPS = [
     'corsheaders'
 ]
@@ -23,7 +22,7 @@ DEV_MIDDLEWARE = [
 MIDDLEWARE = MIDDLEWARE + DEV_MIDDLEWARE  # CORS middleware should be at the top of the list
 
 CORS_ORIGIN_ALLOW_ALL = True
-"""
+
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
