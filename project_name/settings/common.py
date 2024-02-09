@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from django.utils.translation import gettext_lazy as _
+from datetime import timedelta
 
 
 ENVIRONMENT = os.environ.get('ENVIRONMENT', 'development')
@@ -34,6 +35,8 @@ DEPENDENCIES_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.humanize',
 ]
 
 PROJECT_APPS = [
@@ -42,13 +45,11 @@ PROJECT_APPS = [
 ]
 
 ADDONS = [
-    # Pick the Addons you want
-    # To use Webpack, uncomment next line
-    # 'webpack_loader',
-    # To use Rest Framework uncomment next line
-    # 'rest_framework',
-    # To use Push Notifications uncomment next line
-    # 'push_notifications',
+    'django_filters',
+    'drf_spectacular',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 INSTALLED_APPS = DEPENDENCIES_APPS + ADDONS + PROJECT_APPS
@@ -102,18 +103,99 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'main.exceptions.custom_exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ],
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ],
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,
+
+    'ALGORITHM': 'HS256',
+
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    'USER_ID_FIELD': 'id',
+    'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
 # jazzmin settings
 JAZZMIN_SETTINGS = {
     "welcome_sign": 'Welcome admin ' + WSGI_APPLICATION.split(".")[0],
     "site_header": "Library",
     "site_brand": WSGI_APPLICATION.split(".")[0],
-    #change logo admin
-    #"site_logo": "logo.png",
+    # change logo admin
+    # "site_logo": "logo.png",
     "copyright": WSGI_APPLICATION.split(".")[0],
     "user_avatar": "avatar",
     "language_chooser": True,
     "changeform_format": "horizontal_tabs",
     "related_modal_active": True
+}
+
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'project_name API',
+    'DESCRIPTION': 'API Documentation',
+    'SERVE_PUBLIC': True,
+    'VERSION': '1.0.0',
+    'SERVE_PERMISSIONS': ['rest_framework.permissions.AllowAny'],
+    # Allows grouping APIs without considering the /api part
+    'SCHEMA_PATH_PREFIX': "/api",
+    'CAMELIZE_NAMES': True,
+    'SORT_OPERATIONS': True,
+    'SORT_OPERATION_PARAMETERS': True,
+    'COMPONENT_SPLIT_REQUEST': True,
+    'COMPONENT_SPLIT_PATCH': True,
+    'SWAGGER_UI_SETTINGS': {
+        "deepLinking": True,
+        "persistAuthorization": True,
+        "displayOperationId": False,
+        "operationsSorter": "alpha",
+        "tagsSorter": "alpha",
+        "filter": True,
+    },
 }
 
 
@@ -126,6 +208,10 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 AUTH_USER_MODEL = 'users.user'
+SITE_ID = 1
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+
 
 
 LANGUAGES = [
